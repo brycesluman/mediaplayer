@@ -2,14 +2,14 @@ MediaPlayer
 
 Caveat - this could have easily been accomplished with media3. This was just an exercise to build the test app with newer technologies.
 
-MVVM
-
-Clean Architecture
-Hilt for DI
-Compose Navigation (no fragments)
-Jetpack Compose UI
-Android MediaPlayer running in seperate service.
-PlayerService in separate module
+Technologies
+ - MVVM
+ - Clean Architecture
+ - Hilt for DI
+ - Compose Navigation (no fragments)
+ - Jetpack Compose UI
+ - Android MediaPlayer running in seperate service.
+ - PlayerService in separate module
 
 Functionality:
  - Play media
