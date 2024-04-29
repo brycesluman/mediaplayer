@@ -1,6 +1,6 @@
 MediaPlayer
 
-Caveat - this could have easily been accomplished with media3. This was just an exercise to build the test app with newer techniologies.
+Caveat - this could have easily been accomplished with media3. This was just an exercise to build the test app with newer technologies.
 
 MVVM
 
