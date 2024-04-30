@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "ScoutMediaPlayer"
 include(":app")
-include(":playermodule")
