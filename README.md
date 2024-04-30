@@ -8,13 +8,13 @@ Technologies
  - Hilt for DI
  - Compose Navigation (no fragments)
  - Jetpack Compose UI
- - Android MediaPlayer running in seperate service.
- - PlayerService in separate module
+ - Android MediaPlayer running in separate service.
+ - Foreground notification to persist playback
 
 Functionality:
  - Play media
  - Pause Media
- - Skip to next media
+ - Skip to next media base on shuffle mode
  - Skip to previously played media
  - Shuffle modes -> Random, Repeat All, Repeat 1
  - View Library
