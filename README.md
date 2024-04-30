@@ -19,7 +19,7 @@ Functionality:
  - Shuffle modes -> Random, Repeat All, Repeat 1
  - View Library
 
-<img width="444" alt="image" src="https://github.com/brycesluman/mediaplayer/assets/1037120/d11df0a7-41e9-4b89-ae1d-e9cf25edf4d2">
+<img width="453" alt="image" src="https://github.com/brycesluman/mediaplayer/assets/1037120/034fb397-fab4-4ebc-98df-56a88bbfbbdf">
 
 <img width="452" alt="image" src="https://github.com/brycesluman/mediaplayer/assets/1037120/c3a2cbf8-c214-437d-9db0-5f6cdb741e2b">
 
