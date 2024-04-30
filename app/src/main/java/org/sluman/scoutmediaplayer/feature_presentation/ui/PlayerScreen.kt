@@ -77,7 +77,7 @@ fun PlayerScreen (
                             PlayerEvent.ToggleShuffleType(ShuffleType.RANDOM)
                         ) }) {
                         Icon(
-                            painter = painterResource(if (state.value.shuffleType == ShuffleType.RANDOM) R.drawable.shuffle_on else R.drawable.shuffle),
+                            painter = painterResource(R.drawable.shuffle),
                             contentDescription = "Radio button icon",
                         )
                     }
@@ -88,7 +88,7 @@ fun PlayerScreen (
                             PlayerEvent.ToggleShuffleType(ShuffleType.REPEAT)
                         ) }) {
                         Icon(
-                            painter = painterResource(if (state.value.shuffleType == ShuffleType.REPEAT) R.drawable.repeat_on else R.drawable.repeat),
+                            painter = painterResource(R.drawable.repeat),
                             contentDescription = "Radio button icon",
                         )
                     }
@@ -99,7 +99,7 @@ fun PlayerScreen (
                             PlayerEvent.ToggleShuffleType(ShuffleType.REPEAT_1)
                         ) }) {
                         Icon(
-                            painter = painterResource(if (state.value.shuffleType == ShuffleType.REPEAT_1) R.drawable.repeat_one_on else R.drawable.repeat_one),
+                            painter = painterResource(R.drawable.repeat_one),
                             contentDescription = "Radio button icon",
                         )
                     }
