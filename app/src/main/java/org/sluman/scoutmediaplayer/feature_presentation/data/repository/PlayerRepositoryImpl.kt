@@ -28,7 +28,7 @@ class PlayerRepositoryImpl(private val player: Player) : PlayerRepository {
         }
     }
 
-    override fun play(item: MediaItem) {
+    override fun play(item: MediaItem, resume: Boolean) {
         nowPlaying = item
         _playerState.update {
             PlayerState(
@@ -37,7 +37,7 @@ class PlayerRepositoryImpl(private val player: Player) : PlayerRepository {
                 nowPlayingItem = nowPlaying
             )
         }
-        player.play(item)
+        player.play(item, resume)
 //        val intent = Intent(context, PlayerImpl::class.java)
 //        intent.putExtra(PlaybackAction.ACTION_PLAY)
 //        intent.putExtra("URI", item.uri)

@@ -55,6 +55,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    // Robolectric environment
+    testImplementation( "androidx.test:core-ktx:1.5.0")
+    // Mockito framework
+    testImplementation("org.mockito:mockito-core:5.11.0" )
+    // mockito-kotlin
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    // Mockk framework
+    testImplementation("io.mockk:mockk:1.13.10")
 
     val composeBom = platform("androidx.compose:compose-bom:2024.03.00")
     implementation(composeBom)

@@ -1,23 +1,17 @@
 package org.sluman.scoutmediaplayer.feature_player
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.PowerManager
-import androidx.core.app.NotificationCompat
-import androidx.core.app.ServiceCompat.startForeground
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import org.sluman.scoutmediaplayer.feature_presentation.domain.model.MediaItem
 import javax.inject.Inject
 
 
 interface Player {
-    fun play(item: MediaItem)
+    fun play(item: MediaItem, resume: Boolean)
     fun pause()
     fun stop()
     fun setCallback(listener: (PlaybackState) -> Unit)
@@ -28,6 +22,7 @@ class PlayerImpl @Inject constructor(val context: Context) : Player,
     MediaPlayer.OnErrorListener,
     MediaPlayer.OnCompletionListener {
     private var mediaPlayer: MediaPlayer? = null
+    private var length = 0
 
     private var onResult: ((PlaybackState) -> Unit)? = null
 
@@ -44,7 +39,7 @@ class PlayerImpl @Inject constructor(val context: Context) : Player,
         return mediaPlayer as MediaPlayer
     }
 
-    override fun play(item: MediaItem) {
+    override fun play(item: MediaItem, resume: Boolean) {
         ContextCompat.startForegroundService(
             context,
             Intent(context, MediaNotificationService::class.java)
@@ -53,6 +48,9 @@ class PlayerImpl @Inject constructor(val context: Context) : Player,
             mediaPlayer?.stop()
         }
         item.uri?.let {
+            if (!resume) {
+                length = 0
+            }
             val afd = context.assets.openFd(it)
             if (mediaPlayer == null) {
                 mediaPlayer = initMediaPlayer()// initialize it here
@@ -76,20 +74,25 @@ class PlayerImpl @Inject constructor(val context: Context) : Player,
     }
 
     override fun pause() {
-        if (mediaPlayer?.isPlaying == true) {
+        if (mediaPlayer != null && mediaPlayer?.isPlaying == true) {
             mediaPlayer?.pause()
+            length = mediaPlayer!!.currentPosition
         }
     }
 
     override fun stop() {
         if (mediaPlayer?.isPlaying == true) {
             mediaPlayer?.stop()
+            length = 0
         }
     }
 
     /** Called when MediaPlayer is ready */
     override fun onPrepared(mediaPlayer: MediaPlayer) {
         onResult?.let { it(PlaybackState.STARTED) }
+        if( length>0 ){
+            mediaPlayer.seekTo(length)
+        }
         mediaPlayer.start()
     }
 

@@ -8,6 +8,6 @@ class PlayUseCase(
 ) {
     operator fun invoke(mediaItem: MediaItem) {
 
-        repository.play(mediaItem)
+        repository.play(mediaItem, true)
     }
 }

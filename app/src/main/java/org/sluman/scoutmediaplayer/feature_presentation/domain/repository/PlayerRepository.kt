@@ -7,7 +7,7 @@ import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.ShuffleTyp
 
 interface PlayerRepository {
     val playerState: StateFlow<PlayerState>
-    fun play(item: MediaItem)
+    fun play(item: MediaItem, resume: Boolean)
     fun pause()
     fun toggleShuffleMode(mode: ShuffleType)
     fun getShuffleMode(): ShuffleType
