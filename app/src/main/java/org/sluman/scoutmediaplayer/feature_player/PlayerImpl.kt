@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 
 interface Player {
-    fun play(item: MediaItem, resume: Boolean)
+    fun play(item: MediaItem)
     fun pause()
     fun stop()
     fun setCallback(listener: (PlaybackState) -> Unit)
@@ -39,7 +39,7 @@ class PlayerImpl @Inject constructor(val context: Context) : Player,
         return mediaPlayer as MediaPlayer
     }
 
-    override fun play(item: MediaItem, resume: Boolean) {
+    override fun play(item: MediaItem) {
         ContextCompat.startForegroundService(
             context,
             Intent(context, MediaNotificationService::class.java)
@@ -47,10 +47,8 @@ class PlayerImpl @Inject constructor(val context: Context) : Player,
         if (mediaPlayer?.isPlaying == true) {
             mediaPlayer?.stop()
         }
+
         item.uri?.let {
-            if (!resume) {
-                length = 0
-            }
             val afd = context.assets.openFd(it)
             if (mediaPlayer == null) {
                 mediaPlayer = initMediaPlayer()// initialize it here
@@ -74,9 +72,9 @@ class PlayerImpl @Inject constructor(val context: Context) : Player,
     }
 
     override fun pause() {
+        length = mediaPlayer!!.currentPosition
         if (mediaPlayer != null && mediaPlayer?.isPlaying == true) {
             mediaPlayer?.pause()
-            length = mediaPlayer!!.currentPosition
         }
     }
 
@@ -92,16 +90,19 @@ class PlayerImpl @Inject constructor(val context: Context) : Player,
         onResult?.let { it(PlaybackState.STARTED) }
         if( length>0 ){
             mediaPlayer.seekTo(length)
+            length = 0
         }
         mediaPlayer.start()
     }
 
     override fun onError(mediaPlayer: MediaPlayer?, p1: Int, p2: Int): Boolean {
+        length = 0
         onResult?.let { it(PlaybackState.ERROR) }
         return false
     }
 
     override fun onCompletion(mediaPlayer: MediaPlayer) {
+        length = 0
         onResult?.let { it(PlaybackState.COMPLETED) }
     }
 

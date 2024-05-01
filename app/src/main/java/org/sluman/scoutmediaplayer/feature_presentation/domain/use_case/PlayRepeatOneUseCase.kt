@@ -6,6 +6,6 @@ class PlayRepeatOneUseCase (
     private val playerRepository: PlayerRepository
 ) {
     operator fun invoke() {
-        playerRepository.getNowPlayingItem()?.let { playerRepository.play(it, false) }
+        playerRepository.getNowPlayingItem()?.let { playerRepository.play(it) }
     }
 }

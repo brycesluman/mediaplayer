@@ -11,7 +11,7 @@ class PlayMostRecentItemUseCase (
     operator fun invoke() {
         if (recentsRepository.getRecentSize()>=1) {
             Log.d("PlayerViewModel", "topItem: " + recentsRepository.peekAtTopItem())
-            playerRepository.play(recentsRepository.getMostRecentItem(), false)
+            playerRepository.play(recentsRepository.getMostRecentItem())
         }
     }
 }

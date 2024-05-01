@@ -14,6 +14,6 @@ class PlayRandomUseCase (
             }.random()
             Log.d("PlayerViewModel", "randomItem: $randomItem")
 
-            playerRepository.play(randomItem, false)
+            playerRepository.play(randomItem)
         }
 }

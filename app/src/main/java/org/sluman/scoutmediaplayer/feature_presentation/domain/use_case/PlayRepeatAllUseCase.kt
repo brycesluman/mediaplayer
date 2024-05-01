@@ -12,12 +12,12 @@ class PlayRepeatAllUseCase (
         val curIndex = mediaItemRepository.getMediaItems().indexOf(playerRepository.getNowPlayingItem())
         if (mediaItemRepository.getMediaItems().size-1 == curIndex) {
             //last item, go back to zero
-            playerRepository.play(mediaItemRepository.getMediaItems()[0], false)
+            playerRepository.play(mediaItemRepository.getMediaItems()[0])
             return
         }
         val nextItem = mediaItemRepository.getMediaItems()[curIndex+1]
         Log.d("PlayerViewModel", "nextItem: $nextItem")
 
-        playerRepository.play(nextItem, false)
+        playerRepository.play(nextItem)
     }
 }

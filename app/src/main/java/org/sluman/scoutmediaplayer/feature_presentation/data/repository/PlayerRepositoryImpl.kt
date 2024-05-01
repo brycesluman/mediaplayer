@@ -28,7 +28,7 @@ class PlayerRepositoryImpl(private val player: Player) : PlayerRepository {
         }
     }
 
-    override fun play(item: MediaItem, resume: Boolean) {
+    override fun play(item: MediaItem) {
         nowPlaying = item
         _playerState.update {
             PlayerState(
@@ -37,18 +37,11 @@ class PlayerRepositoryImpl(private val player: Player) : PlayerRepository {
                 nowPlayingItem = nowPlaying
             )
         }
-        player.play(item, resume)
-//        val intent = Intent(context, PlayerImpl::class.java)
-//        intent.putExtra(PlaybackAction.ACTION_PLAY)
-//        intent.putExtra("URI", item.uri)
-//        ContextCompat.startForegroundService(context, intent)
+        player.play(item)
     }
 
     override fun pause() {
         player.pause()
-//        val intent = Intent(context, PlayerImpl::class.java)
-//        intent.putExtra(PlaybackAction.ACTION_PAUSE)
-//        ContextCompat.startForegroundService(context, intent)
     }
 
     override fun toggleShuffleMode(mode: ShuffleType) {
