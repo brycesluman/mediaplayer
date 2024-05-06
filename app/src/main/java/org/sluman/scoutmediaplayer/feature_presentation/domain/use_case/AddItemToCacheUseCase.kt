@@ -1,13 +1,13 @@
 package org.sluman.scoutmediaplayer.feature_presentation.domain.use_case
 
 import org.sluman.scoutmediaplayer.feature_presentation.domain.model.MediaItem
-import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.RecentsRepository
+import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.MediaCacheRepository
 
 
-class AddItemToRecentsUseCase(
-    private val repository: RecentsRepository
+class AddItemToCacheUseCase(
+    private val repository: MediaCacheRepository
 ) {
     operator fun invoke(mediaItem: MediaItem) {
-        repository.addToRecents(mediaItem)
+        repository.addToCache(mediaItem)
     }
 }

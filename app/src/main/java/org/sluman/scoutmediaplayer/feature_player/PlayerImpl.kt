@@ -105,12 +105,6 @@ class PlayerImpl @Inject constructor(val context: Context) : Player,
         length = 0
         onResult?.let { it(PlaybackState.COMPLETED) }
     }
-
-    fun onDestroy() {
-        mediaPlayer?.release()
-        mediaPlayer = null
-    }
-
 }
 
 enum class PlaybackState {

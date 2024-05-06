@@ -13,14 +13,16 @@ import org.sluman.scoutmediaplayer.feature_presentation.data.UiState
 import org.sluman.scoutmediaplayer.feature_presentation.domain.model.MediaItem
 import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.PlayerRepository
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PlayerUseCases
-import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.RecentsUseCases
+import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.MediaItemCacheUseCases
 import org.sluman.scoutmediaplayer.feature_presentation.ui.PlayerEvent
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
     private val playerUseCases: PlayerUseCases,
-    private val recentsUseCases: RecentsUseCases,
+    @Named("RecentsUseCases") private val recentsUseCases: MediaItemCacheUseCases,
+    @Named("UpcomingUseCases") private val upcomingUseCases: MediaItemCacheUseCases,
     private val playerRepository: PlayerRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
@@ -72,17 +74,28 @@ class PlayerViewModel @Inject constructor(
 
     private fun skipPrevious() {
         //find previous from recents
-        recentsUseCases.playMostRecentItemUseCase()
+        // add currently playing to upcoming
+        playerUseCases.getNowPlayingItemUseCase()
+            ?.let {
+                upcomingUseCases.addItemToCacheUseCase(it)
+            }
+        recentsUseCases.playTopItemUseCase()
     }
 
     private fun skipNext() {
+        //if upcoming cache is populated play that now.
+
         playerUseCases.getNowPlayingItemUseCase()
-            ?.let { recentsUseCases.addItemToRecentsUseCase(it) }
+            ?.let { recentsUseCases.addItemToCacheUseCase(it) }
         Log.d("PlayerViewModel", "skipNext" + playerRepository.getShuffleMode())
-        when (playerRepository.getShuffleMode()) {
-            ShuffleType.RANDOM -> playerUseCases.playRandomUseCase()
-            ShuffleType.REPEAT -> playerUseCases.playRepeatAllUseCase()
-            ShuffleType.REPEAT_1 -> playerUseCases.playRepeatOneUseCase()
+        if (upcomingUseCases.shouldPlayFromCache()) {
+            upcomingUseCases.playTopItemUseCase()
+        } else {
+            when (playerRepository.getShuffleMode()) {
+                ShuffleType.RANDOM -> playerUseCases.playRandomUseCase()
+                ShuffleType.REPEAT -> playerUseCases.playRepeatAllUseCase()
+                ShuffleType.REPEAT_1 -> playerUseCases.playRepeatOneUseCase()
+            }
         }
     }
 

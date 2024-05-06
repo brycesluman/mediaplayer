@@ -11,23 +11,26 @@ import org.sluman.scoutmediaplayer.feature_player.PlayerImpl
 import org.sluman.scoutmediaplayer.feature_presentation.data.repository.MediaItemRepositoryImpl
 import org.sluman.scoutmediaplayer.feature_presentation.data.repository.PlayerRepositoryImpl
 import org.sluman.scoutmediaplayer.feature_presentation.data.repository.RecentsRepositoryImpl
+import org.sluman.scoutmediaplayer.feature_presentation.data.repository.UpcomingRepositoryImpl
 import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.MediaItemRepository
 import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.PlayerRepository
-import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.RecentsRepository
-import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.AddItemToRecentsUseCase
+import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.MediaCacheRepository
+import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.AddItemToCacheUseCase
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.GetAllMediaItemsUseCase
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.GetNowPlayingItemUseCase
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.GetShuffleModeUseCase
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.MediaItemUseCases
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PauseUseCase
-import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PlayMostRecentItemUseCase
+import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PlayTopItemUseCase
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PlayRandomUseCase
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PlayRepeatAllUseCase
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PlayRepeatOneUseCase
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PlayUseCase
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PlayerUseCases
-import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.RecentsUseCases
+import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.MediaItemCacheUseCases
+import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.ShouldPlayFromCacheUseCase
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.ToggleShuffleModeUseCase
+import javax.inject.Named
 import javax.inject.Singleton
 
 
@@ -55,23 +58,54 @@ object AppModule {
 
     @Provides
     @Singleton
+    @Named("RecentsUseCases")
     fun provideRecentsUseCase(
         playerRepository: PlayerRepository,
-        recentsRepository: RecentsRepository
-    ): RecentsUseCases {
-        return RecentsUseCases(
-            addItemToRecentsUseCase = AddItemToRecentsUseCase(recentsRepository),
-            playMostRecentItemUseCase = PlayMostRecentItemUseCase(
-                recentsRepository,
+        @Named("RecentsRepository") mediaCacheRepository: MediaCacheRepository
+    ): MediaItemCacheUseCases {
+        return MediaItemCacheUseCases(
+            addItemToCacheUseCase = AddItemToCacheUseCase(mediaCacheRepository),
+            playTopItemUseCase = PlayTopItemUseCase(
+                mediaCacheRepository,
                 playerRepository
+            ),
+            shouldPlayFromCache = ShouldPlayFromCacheUseCase(
+                mediaCacheRepository
             )
         )
     }
 
     @Provides
     @Singleton
-    fun provideRecentRepository(): RecentsRepository {
+    @Named("RecentsRepository")
+    fun provideRecentRepository(): MediaCacheRepository {
         return RecentsRepositoryImpl()
+    }
+
+    @Provides
+    @Singleton
+    @Named("UpcomingUseCases")
+    fun provideUpcomingUseCase(
+        playerRepository: PlayerRepository,
+        @Named("UpcomingRepository") mediaCacheRepository: MediaCacheRepository
+    ): MediaItemCacheUseCases {
+        return MediaItemCacheUseCases(
+            addItemToCacheUseCase = AddItemToCacheUseCase(mediaCacheRepository),
+            playTopItemUseCase = PlayTopItemUseCase(
+                mediaCacheRepository,
+                playerRepository
+            ),
+            shouldPlayFromCache = ShouldPlayFromCacheUseCase(
+                mediaCacheRepository
+            )
+        )
+    }
+
+    @Provides
+    @Singleton
+    @Named("UpcomingRepository")
+    fun provideUpcomingRepository(): MediaCacheRepository {
+        return UpcomingRepositoryImpl()
     }
 
     @Provides

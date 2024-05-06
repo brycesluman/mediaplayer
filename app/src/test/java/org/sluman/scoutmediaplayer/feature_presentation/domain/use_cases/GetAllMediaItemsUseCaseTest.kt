@@ -6,7 +6,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.MediaItemRepository
-import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.RecentsRepository
 
 @ExperimentalCoroutinesApi
 class GetAllMediaItemsUseCaseTest {

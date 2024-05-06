@@ -7,8 +7,8 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.verify
 import org.sluman.scoutmediaplayer.feature_presentation.domain.model.MediaItem
-import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.RecentsRepository
-import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.AddItemToRecentsUseCase
+import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.MediaCacheRepository
+import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.AddItemToCacheUseCase
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -16,18 +16,18 @@ import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.AddItemT
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @ExperimentalCoroutinesApi
-class AddItemToRecentsUseCaseTest {
+class AddItemToCacheUseCaseTest {
     @Mock
-    lateinit var recentsRepository: RecentsRepository
+    lateinit var recentsRepository: MediaCacheRepository
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
     }
     @Test
     fun addItemToRecentsUseCaseTest() {
-            AddItemToRecentsUseCase(recentsRepository).invoke(testItem)
+            AddItemToCacheUseCase(recentsRepository).invoke(testItem)
 
-            verify(recentsRepository).addToRecents(testItem)
+            verify(recentsRepository).addToCache(testItem)
 
     }
     private val testItem = MediaItem(

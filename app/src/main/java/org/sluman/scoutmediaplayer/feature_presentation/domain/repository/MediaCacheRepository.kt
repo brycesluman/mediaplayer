@@ -2,12 +2,12 @@ package org.sluman.scoutmediaplayer.feature_presentation.domain.repository
 
 import org.sluman.scoutmediaplayer.feature_presentation.domain.model.MediaItem
 
-interface RecentsRepository {
-    fun addToRecents(item: MediaItem)
+interface MediaCacheRepository {
+    fun addToCache(item: MediaItem)
 
-    fun getMostRecentItem(): MediaItem
+    fun getTopCacheItem(): MediaItem
 
-    fun getRecentSize(): Int
+    fun getCacheSize(): Int
 
     fun peekAtTopItem(): MediaItem
 }
