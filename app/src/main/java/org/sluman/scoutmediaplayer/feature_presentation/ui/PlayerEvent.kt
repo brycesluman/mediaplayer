@@ -1,6 +1,5 @@
 package org.sluman.scoutmediaplayer.feature_presentation.ui
 
-import org.sluman.scoutmediaplayer.feature_presentation.domain.model.MediaItem
 import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.ShuffleType
 
 sealed class PlayerEvent {
