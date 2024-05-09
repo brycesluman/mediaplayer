@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.sluman.scoutmediaplayer.feature_presentation.data.UiState
 import org.sluman.scoutmediaplayer.feature_presentation.domain.model.MediaItem
+import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.MediaItemRepository
 import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.PlayerRepository
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PlayerUseCases
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.MediaItemCacheUseCases
@@ -23,7 +24,8 @@ class PlayerViewModel @Inject constructor(
     private val playerUseCases: PlayerUseCases,
     @Named("RecentsUseCases") private val recentsUseCases: MediaItemCacheUseCases,
     @Named("UpcomingUseCases") private val upcomingUseCases: MediaItemCacheUseCases,
-    private val playerRepository: PlayerRepository
+    private val playerRepository: PlayerRepository,
+    private val mediaItemRepository: MediaItemRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
@@ -48,8 +50,8 @@ class PlayerViewModel @Inject constructor(
 
     fun onEvent(event: PlayerEvent) {
         when (event) {
-            is PlayerEvent.PlayMediaItem ->
-                playMediaItem(event.mediaItem)
+            is PlayerEvent.Play ->
+                play()
 
             is PlayerEvent.Pause ->
                 pause()
@@ -104,6 +106,10 @@ class PlayerViewModel @Inject constructor(
             isPlaying = false
         )
         playerUseCases.pauseUseCase()
+    }
+
+    private fun play() {
+        playMediaItem(_uiState.value.nowPlayingItem?: mediaItemRepository.getMediaItems()[0])
     }
 
     private fun playMediaItem(item: MediaItem) {

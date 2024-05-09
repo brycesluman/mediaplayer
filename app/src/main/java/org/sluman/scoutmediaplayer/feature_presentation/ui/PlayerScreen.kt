@@ -21,7 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.sluman.scoutmediaplayer.R
-import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.MainViewModel
 import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.PlayerViewModel
 import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.ShuffleType
 
@@ -29,7 +28,6 @@ import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.ShuffleTyp
 fun PlayerScreen (
     modifier: Modifier = Modifier,
     onPlaylistButtonClicked: () -> Unit = {},
-    viewModel: MainViewModel = hiltViewModel(),
     playerViewModel: PlayerViewModel = hiltViewModel()
 ) {
     val state = playerViewModel.uiState.collectAsState()
@@ -134,10 +132,7 @@ fun PlayerScreen (
                     } else {
                         IconButton(onClick = {
                             playerViewModel.onEvent(
-                                PlayerEvent.PlayMediaItem(
-                                    state.value.nowPlayingItem
-                                        ?: viewModel.uiState.value.mediaItems[0]
-                                )
+                                PlayerEvent.Play
                             )
                         }) {
                             Icon(

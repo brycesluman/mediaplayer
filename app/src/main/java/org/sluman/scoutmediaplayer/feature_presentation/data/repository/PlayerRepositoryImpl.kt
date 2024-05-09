@@ -19,6 +19,19 @@ class PlayerRepositoryImpl(private val player: Player) : PlayerRepository {
     override val playerState: StateFlow<PlayerState> = _playerState
 
     init {
+//        _playerState.update {
+//            PlayerState(
+//                isPlaying = false,
+//                isEnded = true,
+//                nowPlayingItem = MediaItem(
+//                    id = 0,
+//                    title = "Claire de Lune",
+//                    artist = "Claude Debussy",
+//                    uri = "Clair_de_Lune.mp3",
+//                    trackLength = 312003
+//                )
+//            )
+//        }
         player.setCallback {
             when (it) {
                 PlaybackState.COMPLETED -> isCompleted()
