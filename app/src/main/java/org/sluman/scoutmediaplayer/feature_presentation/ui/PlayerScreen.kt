@@ -12,25 +12,28 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import org.sluman.scoutmediaplayer.R
-import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.PlayerViewModel
+import org.sluman.scoutmediaplayer.feature_presentation.data.UiState
 import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.ShuffleType
 
 @Composable
 fun PlayerScreen (
     modifier: Modifier = Modifier,
     onPlaylistButtonClicked: () -> Unit = {},
-    playerViewModel: PlayerViewModel = hiltViewModel()
+    onPlayButtonClicked: () -> Unit = {},
+    onPauseButtonClicked: () -> Unit = {},
+    onShuffleButtonClicked: (shuffleType: ShuffleType) -> Unit = {},
+    onPlayNextButtonClicked: () -> Unit = {},
+    onPlayPreviousButtonClicked: () -> Unit = {},
+    state: State<UiState>
 ) {
-    val state = playerViewModel.uiState.collectAsState()
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
@@ -71,9 +74,8 @@ fun PlayerScreen (
                 horizontalArrangement = Arrangement.SpaceAround) {
                 Column {
                     IconToggleButton(checked = state.value.shuffleType == ShuffleType.RANDOM,
-                        onCheckedChange = { playerViewModel.onEvent(
-                            PlayerEvent.ToggleShuffleType(ShuffleType.RANDOM)
-                        ) }) {
+                        onCheckedChange = { onShuffleButtonClicked(ShuffleType.RANDOM)
+                        }) {
                         Icon(
                             painter = painterResource(R.drawable.shuffle),
                             contentDescription = "Radio button icon",
@@ -82,9 +84,8 @@ fun PlayerScreen (
                 }
                 Column {
                     IconToggleButton(checked = state.value.shuffleType == ShuffleType.REPEAT,
-                        onCheckedChange = { playerViewModel.onEvent(
-                            PlayerEvent.ToggleShuffleType(ShuffleType.REPEAT)
-                        ) }) {
+                        onCheckedChange = { onShuffleButtonClicked(ShuffleType.REPEAT)
+                         }) {
                         Icon(
                             painter = painterResource(R.drawable.repeat),
                             contentDescription = "Radio button icon",
@@ -93,9 +94,8 @@ fun PlayerScreen (
                 }
                 Column {
                     IconToggleButton(checked = state.value.shuffleType == ShuffleType.REPEAT_1,
-                        onCheckedChange = { playerViewModel.onEvent(
-                            PlayerEvent.ToggleShuffleType(ShuffleType.REPEAT_1)
-                        ) }) {
+                        onCheckedChange = { onShuffleButtonClicked(ShuffleType.REPEAT_1)
+                        }) {
                         Icon(
                             painter = painterResource(R.drawable.repeat_one),
                             contentDescription = "Radio button icon",
@@ -107,9 +107,7 @@ fun PlayerScreen (
             Row(Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround) {
                 Column {
-                    IconButton(onClick = { playerViewModel.onEvent(
-                        PlayerEvent.SkipPrevious
-                    ) }) {
+                    IconButton(onClick = { onPlayPreviousButtonClicked() }) {
                         Icon(
                             painter = painterResource(R.drawable.skip_previous),
                             contentDescription = "Skip Previous Button"
@@ -120,9 +118,7 @@ fun PlayerScreen (
                 Column {
                     if (state.value.isPlaying) {
                         IconButton(onClick = {
-                            playerViewModel.onEvent(
-                                PlayerEvent.Pause
-                            )
+                            onPauseButtonClicked()
                         }) {
                             Icon(
                                 painter = painterResource(R.drawable.pause),
@@ -131,9 +127,7 @@ fun PlayerScreen (
                         }
                     } else {
                         IconButton(onClick = {
-                            playerViewModel.onEvent(
-                                PlayerEvent.Play
-                            )
+                            onPlayButtonClicked()
                         }) {
                             Icon(
                                 painter = painterResource(R.drawable.play_arrow),
@@ -143,9 +137,7 @@ fun PlayerScreen (
                     }
                 }
                 Column {
-                    IconButton(onClick = { playerViewModel.onEvent(
-                        PlayerEvent.SkipNext
-                    ) }) {
+                    IconButton(onClick = { onPlayNextButtonClicked()}) {
                         Icon(
                             painter = painterResource(R.drawable.skip_next),
                             contentDescription = "Skip Next Button"

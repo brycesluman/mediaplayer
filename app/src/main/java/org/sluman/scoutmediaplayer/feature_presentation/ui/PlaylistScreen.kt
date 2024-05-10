@@ -13,23 +13,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import org.sluman.scoutmediaplayer.R
+import org.sluman.scoutmediaplayer.feature_presentation.data.MediaItemState
 import org.sluman.scoutmediaplayer.feature_presentation.domain.model.MediaItem
-import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.MainViewModel
 
 @Composable
 fun PlaylistScreen(
     modifier: Modifier = Modifier,
     onPlayerButtonClicked: () -> Unit = {},
-    viewModel: MainViewModel = hiltViewModel()
+    state: State<MediaItemState>,
 ) {
-    val state = viewModel.uiState.collectAsState()
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
