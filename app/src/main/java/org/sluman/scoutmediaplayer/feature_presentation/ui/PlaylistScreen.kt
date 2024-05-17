@@ -1,5 +1,6 @@
 package org.sluman.scoutmediaplayer.feature_presentation.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -19,14 +20,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.sluman.scoutmediaplayer.R
-import org.sluman.scoutmediaplayer.feature_presentation.data.MediaItemState
+import org.sluman.scoutmediaplayer.feature_presentation.data.UiState
 import org.sluman.scoutmediaplayer.feature_presentation.domain.model.MediaItem
 
 @Composable
 fun PlaylistScreen(
     modifier: Modifier = Modifier,
     onPlayerButtonClicked: () -> Unit = {},
-    state: State<MediaItemState>,
+    onItemClicked: (item: MediaItem) -> Unit = {},
+    state: State<UiState>,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -44,7 +46,7 @@ fun PlaylistScreen(
                 )
             }
         }
-        Table(state.value.mediaItems)
+        state.value.mediaItems?.let { Table(it, onItemClicked, state.value.nowPlayingItem) }
     }
 }
 @Composable
@@ -62,7 +64,9 @@ fun RowScope.TableCell(
     )
 }
 @Composable
-fun Table(mediaItems: List<MediaItem>) {
+fun Table(mediaItems: List<MediaItem>,
+          onItemClicked: (item: MediaItem) -> Unit,
+          nowPlayingItem: MediaItem?) {
 
     val column1Weight = .3f // 30%
     val column2Weight = .4f // 40%
@@ -85,16 +89,18 @@ fun Table(mediaItems: List<MediaItem>) {
             }
         }
         items(mediaItems) {
-            Row(Modifier.fillMaxWidth()) {
+            Row(Modifier.fillMaxWidth().clickable {
+                onItemClicked(it)
+            }) {
                 TableCell(text = it.title.toString(),
                     weight = column1Weight,
-                    fontWeight = FontWeight.Normal)
+                    fontWeight = if (nowPlayingItem == it) FontWeight.Bold else FontWeight.Normal)
                 TableCell(text = it.artist.toString(),
                     weight = column2Weight,
-                    fontWeight = FontWeight.Normal)
+                    fontWeight = if (nowPlayingItem == it) FontWeight.Bold else FontWeight.Normal)
                 TableCell(text = stringForTime(it.trackLength),
                     weight = column3Weight,
-                    fontWeight = FontWeight.Normal)
+                    fontWeight = if (nowPlayingItem == it) FontWeight.Bold else FontWeight.Normal)
             }
         }
     }

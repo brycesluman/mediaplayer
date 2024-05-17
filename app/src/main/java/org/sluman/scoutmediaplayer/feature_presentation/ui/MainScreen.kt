@@ -14,7 +14,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.sluman.scoutmediaplayer.R
-import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.MainViewModel
 import org.sluman.scoutmediaplayer.feature_presentation.ui.viewmodels.PlayerViewModel
 
 /**
@@ -29,23 +28,34 @@ enum class MainScreen(@StringRes val title: Int) {
 fun ScoutApp(
     navController: NavHostController = rememberNavController()
 ) {
-
-
     Scaffold(
 
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = MainScreen.Player.name,
+            startDestination = MainScreen.Playlist.name,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            composable(route = MainScreen.Playlist.name) {
+                val playerViewModel: PlayerViewModel = hiltViewModel()
+                PlaylistScreen(
+                    onPlayerButtonClicked = { navController.navigate(MainScreen.Player.name) },
+                    onItemClicked = {
+                        playerViewModel.onEvent(PlayerEvent.PlayMediaItem(it))
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(dimensionResource(R.dimen.padding_medium)),
+                    state = playerViewModel.uiState.collectAsState()
+                )
+            }
             composable(route = MainScreen.Player.name) {
                 val playerViewModel: PlayerViewModel = hiltViewModel()
                 PlayerScreen(
                     onPlaylistButtonClicked = {
-                        navController.navigate(MainScreen.Playlist.name)
+                        navController.navigateUp()
                     },
                     onPlayButtonClicked = {
                         playerViewModel.onEvent(PlayerEvent.Play)
@@ -66,16 +76,6 @@ fun ScoutApp(
                         .fillMaxSize()
                         .padding(dimensionResource(R.dimen.padding_medium)),
                     state = playerViewModel.uiState.collectAsState()
-                )
-            }
-            composable(route = MainScreen.Playlist.name) {
-                val viewModel: MainViewModel = hiltViewModel()
-                PlaylistScreen(
-                    onPlayerButtonClicked = { navController.navigateUp() },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(dimensionResource(R.dimen.padding_medium)),
-                    state = viewModel.uiState.collectAsState()
                 )
             }
         }

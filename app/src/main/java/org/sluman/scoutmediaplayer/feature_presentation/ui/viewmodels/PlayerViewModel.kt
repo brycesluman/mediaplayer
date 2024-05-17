@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +16,7 @@ import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.MediaI
 import org.sluman.scoutmediaplayer.feature_presentation.domain.repository.PlayerRepository
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.PlayerUseCases
 import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.MediaItemCacheUseCases
+import org.sluman.scoutmediaplayer.feature_presentation.domain.use_case.MediaItemUseCases
 import org.sluman.scoutmediaplayer.feature_presentation.ui.PlayerEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,6 +24,7 @@ import javax.inject.Named
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
     private val playerUseCases: PlayerUseCases,
+    private val mediaItemUseCases: MediaItemUseCases,
     @Named("RecentsUseCases") private val recentsUseCases: MediaItemCacheUseCases,
     @Named("UpcomingUseCases") private val upcomingUseCases: MediaItemCacheUseCases,
     private val playerRepository: PlayerRepository,
@@ -30,7 +33,11 @@ class PlayerViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
+    private var getMediaItemsJob: Job? = null
+
     init {
+        getMediaItems()
+
         viewModelScope.launch {
             playerRepository.playerState.collectLatest { state ->
                 if (state.isEnded) {
@@ -52,6 +59,9 @@ class PlayerViewModel @Inject constructor(
         when (event) {
             is PlayerEvent.Play ->
                 play()
+
+            is PlayerEvent.PlayMediaItem ->
+                playMediaItem(event.mediaItem)
 
             is PlayerEvent.Pause ->
                 pause()
@@ -121,7 +131,17 @@ class PlayerViewModel @Inject constructor(
         // set now playing id
         // trigger play in the player
     }
-
+    private fun getMediaItems() {
+        getMediaItemsJob?.cancel()
+        viewModelScope.launch {
+            mediaItemUseCases.getAllMediaItems()
+                .let { mediaItems ->
+                    _uiState.value = uiState.value.copy(
+                        mediaItems = mediaItems
+                    )
+                }
+        }
+    }
 }
 
 enum class ShuffleType {

@@ -8,5 +8,6 @@ data class UiState(
     val isEnded: Boolean = false,
     val isError: Boolean = false,
     val nowPlayingItem: MediaItem? = null,
+    val mediaItems: List<MediaItem>? = null,
     val shuffleType: ShuffleType = ShuffleType.REPEAT
 )
